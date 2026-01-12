@@ -1,0 +1,42 @@
+name: Docker Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lighthouse-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        
+      - name: Print Working Directory and List Files
+        run: |
+          echo Current directory:
+          pwd
+          echo Files in current directory:
+          ls -l
+          
+      - name: Test with Lighthouse and Puppeteer
+        run: |
+          docker run --rm -v "$PWD:$PWD" -w "$PWD" ibombit/lighthouse-puppeteer-chrome:11.7.1-alpine npx mocha ${{ secrets.TEST_PATH }} --browsertype=desktop --headless=true --url="https://demoqa.com/"
+
+      - name: Upload report files
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-reports
+          path: |
+            ./user-flow.report.html
+            ./user-flow.report.json
