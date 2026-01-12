@@ -2,8 +2,8 @@ import fs from 'fs/promises';
 import https from 'https';
 import logger from "../logger/logger.js";
 
-const reportPath = './reports/user-flow.report';
-const reportPathJson = './reports/user-flow.report';
+const reportPath = './reports/user-flow.report.html';
+const reportPathJson = './reports/user-flow.report.json';
 
 const performanceAudits = [
   'first-contentful-paint',
